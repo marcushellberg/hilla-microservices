@@ -18,6 +18,9 @@ public class UserDetailsService {
     public record Order(Long id, Long userId, String product, Double price) {
     }
 
+    public record UserDetail(User user, List<Order> orders) {
+    }
+
     private final WebClient.Builder webClientBuilder;
 
     @Value("${user-service.url}")
@@ -30,7 +33,15 @@ public class UserDetailsService {
         this.webClientBuilder = webClientBuilder;
     }
 
-    public List<User> getUsers() {
+
+    public List<UserDetail> getUserDetails() {
+        var users = getUsers();
+        return users.stream()
+                .map(user -> new UserDetail(user, getOrders(user.id())))
+                .toList();
+    }
+
+    private List<User> getUsers() {
         WebClient userClient = webClientBuilder.baseUrl(userServiceUrl).build();
         var users = userClient.get()
                 .uri("/users")
@@ -42,7 +53,7 @@ public class UserDetailsService {
         return users;
     }
 
-    public List<Order> getOrders(String userId) {
+    private List<Order> getOrders(Long userId) {
         WebClient orderClient = webClientBuilder.baseUrl(orderServiceUrl).build();
         var orders = orderClient.get()
                 .uri("/orders/user/" + userId)

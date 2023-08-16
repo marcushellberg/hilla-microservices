@@ -11,9 +11,10 @@ The example consists of 3 applications:
 - `order-service` - A service that provides order data
 - `hilla-app` - The frontend application that aggregates data from the other services
 
+![The Hilla app aggregates data from the user and order services](hilla-microservices.png)
+
 ## Running the example
 You can either run the example locally or in a Docker container.
 
-Run the example locally by running the Spring Boot application in each folder.
-
-Run the example in Docker by running `docker-compose up` in the root folder.
+- Run the example locally by running the Spring Boot application in each folder.
+- Run the example in Docker by running `docker-compose up (--build)` in the root folder.

@@ -5,34 +5,31 @@ import Order from "Frontend/generated/com/example/application/UserDetailsService
 import {Select} from "@hilla/react-components/Select";
 import {Grid} from "@hilla/react-components/Grid";
 import {GridColumn} from "@hilla/react-components/GridColumn";
-import {ComboBox} from "@hilla/react-components/ComboBox";
+import {ComboBox, ComboBoxSelectedItemChangedEvent} from "@hilla/react-components/ComboBox";
 import {UserDetailsService} from "Frontend/generated/endpoints";
+import UserDetail from "Frontend/generated/com/example/application/UserDetailsService/UserDetail";
 
 export default function App() {
-    const [users, setUsers] = useState<User[]>([]);
-    const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
+    const [userDetails, setUserDetails] = useState<UserDetail[]>([]);
     const [orders, setOrders] = useState<Order[]>([]);
 
     useEffect(() => {
-        UserDetailsService.getUsers().then(setUsers);
+        UserDetailsService.getUserDetails().then(setUserDetails);
     }, []);
 
-    useEffect(() => {
-        if (selectedUserId) {
-            UserDetailsService.getOrders(selectedUserId).then(setOrders);
-        } else {
-            setOrders([]);
-        }
-    }, [selectedUserId]);
+    function selectedUserChanged(e: ComboBoxSelectedItemChangedEvent<UserDetail>) {
+        const orders = e.detail.value ? e.detail.value.orders : [];
+        setOrders(orders);
+    }
 
     return (
         <div className="flex flex-col items-start gap-l p-m">
             <h1>Hilla microservice example</h1>
             <ComboBox label="Select user to view orders"
-                      items={users}
-                      itemLabelPath="name"
-                      itemValuePath="id"
-                      onValueChanged={e => setSelectedUserId(e.detail.value)}/>
+                      items={userDetails}
+                      itemLabelPath="user.name"
+                      onSelectedItemChanged={selectedUserChanged}
+            />
             <Grid items={orders}>
                 <GridColumn path="product"/>
                 <GridColumn path="price"/>
