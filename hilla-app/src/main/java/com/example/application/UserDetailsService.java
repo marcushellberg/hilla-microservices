@@ -35,9 +35,14 @@ public class UserDetailsService {
 
 
     public List<UserDetail> getUserDetails() {
+        // Call user service to get all users
         var users = getUsers();
         return users.stream()
-                .map(user -> new UserDetail(user, getOrders(user.id())))
+                .map(user -> {
+                    // Call order service to get all orders for each user
+                    var orders = getOrders(user.id());
+                    return new UserDetail(user, orders);
+                })
                 .toList();
     }
 

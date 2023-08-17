@@ -25,11 +25,12 @@ export default function App() {
     return (
         <div className="flex flex-col items-start gap-l p-m">
             <h1>Hilla microservice example</h1>
+
             <ComboBox label="Select user to view orders"
                       items={userDetails}
                       itemLabelPath="user.name"
-                      onSelectedItemChanged={selectedUserChanged}
-            />
+                      onSelectedItemChanged={selectedUserChanged}/>
+
             <Grid items={orders}>
                 <GridColumn path="product"/>
                 <GridColumn path="price"/>
